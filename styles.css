@@ -50,7 +50,7 @@ body {
 
 /* 游戏头部 */
 .game-header {
-    background: rgba(255, 255, 255, 0.9); /* 白色半透明 */
+    background: rgba(255, 255, 255, 0.8); /* 白色半透明 */
     border-radius: var(--radius-lg);
     padding: 20px;
     margin-bottom: 20px;
@@ -250,9 +250,9 @@ body {
     padding: 10px;
     border: none;
     border-radius: var(--radius-sm);
-    font-family: 'Noto Serif SC', serif;
+    font-family: "Microsoft YaHei", "微软雅黑", sans-serif; /* 微软雅黑字体 */
     font-size: 1rem;
-    font-weight: bold;
+    font-weight: bold; /* 粗体 */
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
@@ -479,9 +479,9 @@ body {
     padding: 12px 24px;
     border: none;
     border-radius: var(--radius-sm);
-    font-family: 'Noto Serif SC', serif;
+    font-family: "Microsoft YaHei", "微软雅黑", sans-serif; /* 微软雅黑字体 */
     font-size: 1rem;
-    font-weight: bold;
+    font-weight: bold; /* 粗体 */
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
@@ -641,7 +641,8 @@ body {
     border: 2px solid var(--border-color);
     border-radius: var(--radius-md);
     color: white; /* 白色文字 */
-    font-family: 'Noto Serif SC', serif;
+    font-family: "Microsoft YaHei", "微软雅黑", sans-serif; /* 微软雅黑字体 */
+    font-weight: bold; /* 粗体 */
     font-size: 1rem;
     cursor: pointer;
     transition: all 0.3s ease;
