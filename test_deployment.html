@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>部署测试 - 山中一甲子</title>
+    <style>
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background: linear-gradient(135deg, #1a2a1a 0%, #2d3b2d 100%);
+            color: #e8f5e9;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(42, 63, 42, 0.9);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid #5a7d5a;
+        }
+        h1 {
+            color: #a5d6a7;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .step {
+            background: rgba(76, 175, 80, 0.1);
+            border-left: 4px solid #4CAF50;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .step-number {
+            background: #4CAF50;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .code {
+            background: #2c3e2c;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+            border: 1px solid #5a7d5a;
+        }
+        .success {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .warning {
+            color: #FFC107;
+            font-weight: bold;
+        }
+        .error {
+            color: #F44336;
+            font-weight: bold;
+        }
+        .btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+        .btn-test {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+        }
+        .btn-deploy {
+            background: linear-gradient(135deg, #9C27B0 0%, #7B1FA2 100%);
+        }
+        .test-result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        .test-result.success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4CAF50;
+            display: block;
+        }
+        .test-result.error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid #F44336;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-rocket"></i> 山中一甲子 - 部署测试</h1>
+        
+        <div class="step">
+            <div><span class="step-number">1</span> <strong>检查文件完整性</strong></div>
+            <p>验证游戏所需的所有文件是否就绪：</p>
+            <div class="code">
+                ✅ index.html - 主游戏文件<br>
+                ✅ styles.css - 样式文件<br>
+                ✅ game.js - 游戏逻辑<br>
+                ✅ ai-service.js - AI服务<br>
+                ✅ visual-effects.js - 视觉特效<br>
+                ✅ victory-screen.js - 胜利画面<br>
+                ✅ .gitignore - Git忽略文件<br>
+                ✅ .github/workflows/deploy.yml - 部署配置
+            </div>
+        </div>
+        
+        <div class="step">
+            <div><span class="step-number">2</span> <strong>GitHub 仓库设置</strong></div>
+            <p>确保仓库设置为：</p>
+            <ul>
+                <li>✅ 公开仓库 (Public)</li>
+                <li>✅ 主分支为 main</li>
+                <li>✅ 启用 GitHub Pages</li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <div><span class="step-number">3</span> <strong>GitHub Pages 配置</strong></div>
+            <p>访问仓库 Settings → Pages：</p>
+            <div class="code">
+                Source: Deploy from a branch<br>
+                Branch: main<br>
+                Folder: / (root)
+            </div>
+        </div>
+        
+        <div class="step">
+            <div><span class="step-number">4</span> <strong>访问地址</strong></div>
+            <p>游戏发布后可通过以下地址访问：</p>
+            <div class="code">
+                https://[你的用户名].github.io/[仓库名]/
+            </div>
+            <p class="warning">⚠️ 首次部署需要等待1-2分钟</p>
+        </div>
+        
+        <div class="step">
+            <div><span class="step-number">5</span> <strong>多设备访问</strong></div>
+            <p>成功部署后，可在以下设备访问：</p>
+            <ul>
+                <li>📱 手机：打开浏览器，输入游戏地址</li>
+                <li>💻 电脑：任何电脑浏览器均可访问</li>
+                <li>📱 平板：适配各种屏幕尺寸</li>
+            </ul>
+            <p class="success">🎮 所有设备数据独立保存（浏览器本地存储）</p>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn btn-test" onclick="testGame()">
+                <i class="fas fa-play"></i> 测试游戏运行
+            </button>
+            <button class="btn btn-deploy" onclick="window.location.href='index.html'">
+                <i class="fas fa-gamepad"></i> 立即开始游戏
+            </button>
+            <button class="btn" onclick="window.open('DEPLOY_GUIDE.md')">
+                <i class="fas fa-book"></i> 查看详细指南
+            </button>
+        </div>
+        
+        <div id="testResult" class="test-result"></div>
+    </div>
+    
+    <script>
+        function testGame() {
+            const resultDiv = document.getElementById('testResult');
+            resultDiv.className = 'test-result';
+            resultDiv.innerHTML = '<p>正在测试游戏运行环境...</p>';
+            
+            // 测试 localStorage
+            try {
+                localStorage.setItem('test', 'test');
+                localStorage.removeItem('test');
+                resultDiv.innerHTML += '<p>✅ localStorage 可用</p>';
+            } catch (e) {
+                resultDiv.innerHTML += '<p class="error">❌ localStorage 不可用</p>';
+                resultDiv.className = 'test-result error';
+                return;
+            }
+            
+            // 测试 JavaScript 模块
+            const modules = ['game.js', 'ai-service.js', 'visual-effects.js', 'victory-screen.js'];
+            let allModulesLoaded = true;
+            
+            modules.forEach(module => {
+                const scriptTest = document.createElement('script');
+                scriptTest.src = module;
+                scriptTest.onerror = () => {
+                    resultDiv.innerHTML += `<p class="error">❌ ${module} 加载失败</p>`;
+                    allModulesLoaded = false;
+                };
+                document.head.appendChild(scriptTest);
+            });
+            
+            setTimeout(() => {
+                if (allModulesLoaded) {
+                    resultDiv.innerHTML += '<p>✅ 所有JavaScript模块加载成功</p>';
+                    resultDiv.innerHTML += '<p>🎉 游戏运行环境测试通过！</p>';
+                    resultDiv.innerHTML += '<p>现在可以部署到 GitHub Pages</p>';
+                    resultDiv.className = 'test-result success';
+                } else {
+                    resultDiv.className = 'test-result error';
+                }
+            }, 1000);
+        }
+        
+        // 添加 Font Awesome
+        const faLink = document.createElement('link');
+        faLink.rel = 'stylesheet';
+        faLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+        document.head.appendChild(faLink);
+    </script>
+</body>
+</html>

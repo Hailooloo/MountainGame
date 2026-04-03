@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>山中一甲子 - 五行放置游戏</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 游戏标题和状态栏 -->
+        <header class="game-header">
+            <h1 class="game-title"><i class="fas fa-mountain"></i> 山中一甲子</h1>
+            <div class="game-stats">
+                <div class="time-display">
+                    <i class="fas fa-clock"></i>
+                    <span id="game-time">山中第一日</span>
+                </div>
+                <div class="weather-display">
+                    <i class="fas fa-cloud-sun" id="weather-icon"></i>
+                    <span id="weather-text">风和日丽</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 游戏控制栏 -->
+        <section class="game-control-section">
+            <div class="control-panel">
+                <div class="resource-display">
+                    <div class="resource-item">
+                        <i class="fas fa-coins"></i>
+                        <span>水币：<span id="water-coins">100</span></span>
+                    </div>
+                    <div class="resource-item">
+                        <i class="fas fa-hourglass-half"></i>
+                        <span>游戏时间：<span id="total-time">0</span>日</span>
+                    </div>
+                </div>
+                
+                <div class="game-controls">
+                    <button id="save-game-btn" class="control-btn">
+                        <i class="fas fa-save"></i> 保存
+                    </button>
+                    <button id="load-game-btn" class="control-btn">
+                        <i class="fas fa-folder-open"></i> 加载
+                    </button>
+                    <button id="reset-game-btn" class="control-btn">
+                        <i class="fas fa-redo"></i> 重置
+                    </button>
+                    <button id="help-btn" class="control-btn">
+                        <i class="fas fa-question-circle"></i> 帮助
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 主游戏区域 -->
+        <main class="game-main">
+            <!-- 五行平衡显示 -->
+            <section class="five-elements-section">
+                <h2><i class="fas fa-yin-yang"></i> 五行流转</h2>
+                <div class="elements-container">
+                    <div class="element-card wood" data-element="wood">
+                        <div class="element-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h3>木</h3>
+                        <p class="element-desc">生长/技能</p>
+                        <div class="element-value">
+                            <span id="wood-value">50</span>/100
+                        </div>
+                        <div class="element-bar">
+                            <div class="element-fill" id="wood-fill" style="width: 50%"></div>
+                        </div>
+                        <button class="element-btn" data-action="increase-wood">
+                            <i class="fas fa-seedling"></i> 滋养木
+                        </button>
+                    </div>
+
+                    <div class="element-card fire" data-element="fire">
+                        <div class="element-icon">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <h3>火</h3>
+                        <p class="element-desc">能量/名声</p>
+                        <div class="element-value">
+                            <span id="fire-value">50</span>/100
+                        </div>
+                        <div class="element-bar">
+                            <div class="element-fill" id="fire-fill" style="width: 50%"></div>
+                        </div>
+                        <button class="element-btn" data-action="increase-fire">
+                            <i class="fas fa-magic"></i> 点燃火
+                        </button>
+                    </div>
+
+                    <div class="element-card earth" data-element="earth">
+                        <div class="element-icon">
+                            <i class="fas fa-mountain"></i>
+                        </div>
+                        <h3>土</h3>
+                        <p class="element-desc">承载/防御</p>
+                        <div class="element-value">
+                            <span id="earth-value">50</span>/100
+                        </div>
+                        <div class="element-bar">
+                            <div class="element-fill" id="earth-fill" style="width: 50%"></div>
+                        </div>
+                        <button class="element-btn" data-action="increase-earth">
+                            <i class="fas fa-hand-holding-water"></i> 滋润土
+                        </button>
+                    </div>
+
+                    <div class="element-card metal" data-element="metal">
+                        <div class="element-icon">
+                            <i class="fas fa-hammer"></i>
+                        </div>
+                        <h3>金</h3>
+                        <p class="element-desc">技术/工具</p>
+                        <div class="element-value">
+                            <span id="metal-value">50</span>/100
+                        </div>
+                        <div class="element-bar">
+                            <div class="element-fill" id="metal-fill" style="width: 50%"></div>
+                        </div>
+                        <button class="element-btn" data-action="increase-metal">
+                            <i class="fas fa-tools"></i> 锻造金
+                        </button>
+                    </div>
+
+                    <div class="element-card water" data-element="water">
+                        <div class="element-icon">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <h3>水</h3>
+                        <p class="element-desc">财富/流通</p>
+                        <div class="element-value">
+                            <span id="water-value">50</span>/100
+                        </div>
+                        <div class="element-bar">
+                            <div class="element-fill" id="water-fill" style="width: 50%"></div>
+                        </div>
+                        <button class="element-btn" data-action="increase-water">
+                            <i class="fas fa-cloud-rain"></i> 降下水
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="balance-indicator">
+                    <div class="balance-status">
+                        <i class="fas fa-balance-scale"></i>
+                        <span id="balance-text">五行平衡：尚可</span>
+                    </div>
+                    <div class="balance-tip" id="balance-tip">
+                        五行相生相克，保持平衡方能福泽连绵
+                    </div>
+                </div>
+            </section>
+
+            <!-- 荒山显示和交互 -->
+            <section class="mountain-section">
+                <h2><i class="fas fa-mountain-sun"></i> 荒山福地</h2>
+                <div class="mountain-display">
+                    <div class="mountain-visual" id="mountain-visual">
+                        <!-- 动态生成的荒山元素 -->
+                        <div class="mountain-base"></div>
+                        <div class="mountain-plants" id="mountain-plants"></div>
+                        <div class="mountain-animals" id="mountain-animals"></div>
+                        <div class="weather-effect" id="weather-effect"></div>
+                    </div>
+                    <div class="mountain-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">灵植数量：</span>
+                            <span class="stat-value" id="plant-count">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">神兽来访：</span>
+                            <span class="stat-value" id="animal-count">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">土地肥力：</span>
+                            <span class="stat-value" id="soil-fertility">50</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">存储空间：</span>
+                            <span class="stat-value" id="storage-capacity">100</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI对话区域 -->
+            <section class="ai-dialogue-section">
+                <h2><i class="fas fa-comment-dots"></i> 山中悟道</h2>
+                <div class="dialogue-container">
+                    <div class="dialogue-history" id="dialogue-history">
+                        <div class="dialogue-message system">
+                            <div class="message-header">
+                                <i class="fas fa-mountain"></i> 山灵
+                            </div>
+                            <div class="message-content">
+                                欢迎来到山中一甲子。此处时光流转，五行相生相克。今日心情如何？
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dialogue-input">
+                        <textarea id="mood-input" placeholder="输入你的今日心情，如山灵倾诉...（例如：今天工作很累，想在山中静心）"></textarea>
+                        <div class="dialogue-actions">
+                            <button id="send-mood-btn" class="primary-btn">
+                                <i class="fas fa-paper-plane"></i> 感悟山中
+                            </button>
+                            <button id="auto-mood-btn" class="secondary-btn">
+                                <i class="fas fa-random"></i> 随机心情
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="dialogue-tips">
+                        <i class="fas fa-lightbulb"></i>
+                        山灵会根据你的心情，以易学智慧回应，并触发相应的天气变化
+                    </div>
+                </div>
+            </section>
+
+            <!-- 游戏日志 -->
+            <section class="game-log-section">
+                <h2><i class="fas fa-scroll"></i> 山间记事</h2>
+                <div class="log-container">
+                    <div class="log-entries" id="log-entries">
+                        <div class="log-entry">
+                            <span class="log-time">山中第一日</span>
+                            <span class="log-content">你来到这座荒山，开始调节五行平衡...</span>
+                        </div>
+                    </div>
+                    <button id="clear-log-btn" class="secondary-btn">
+                        <i class="fas fa-trash"></i> 清空日志
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 帮助模态框 -->
+    <div id="help-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-book"></i> 山中一甲子 · 游戏说明</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h4>游戏世界观</h4>
+                <p>你拥有一座基于"地山谦"卦象的荒山，目标是通过调节"金木水火土"的平衡，让荒山长出灵植、吸引神兽，最终变成世外桃源。</p>
+                
+                <h4>五行流转机制</h4>
+                <ul>
+                    <li><strong>木（生长/技能）</strong>：决定植物的生长速度</li>
+                    <li><strong>火（能量/名声）</strong>：决定荒山的温度与吸引神兽的概率</li>
+                    <li><strong>土（承载/防御）</strong>：决定土地肥力与存储空间</li>
+                    <li><strong>金（技术/工具）</strong>：决定采集资源的效率与工具升级</li>
+                    <li><strong>水（财富/流通）</strong>：作为核心货币，调节火的燥气</li>
+                </ul>
+                
+                <h4>AI互动功能</h4>
+                <p>输入你的每日情绪，山灵会以易学智慧回应，并触发相应的天气变化（如：降下"壬水雨"增加水元素）。</p>
+                
+                <h4>五行相生相克</h4>
+                <p>木生火，火生土，土生金，金生水，水生木。相克：木克土，土克水，水克火，火克金，金克木。</p>
+                
+                <h4>水币系统说明</h4>
+                <p>水币是游戏中的核心货币，用于调节五行元素。获取方式：</p>
+                <ul>
+                    <li><strong>每日自动收入</strong>：每天获得水元素值 ÷ 10 的水币</li>
+                    <li><strong>五行平衡奖励</strong>：五行极佳平衡每天额外获得20水币，良好平衡获得10水币</li>
+                    <li><strong>初始资金</strong>：游戏开始时获得100水币</li>
+                </ul>
+                <p>水币消耗：每次调节五行元素消耗10水币。</p>
+                <p><strong>游戏策略</strong>：优先提升水元素可以增加每日收入，形成良性循环。</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="ai-service.js"></script>
+    <script src="visual-effects.js"></script>
+    <script src="victory-screen.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
