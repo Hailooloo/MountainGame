@@ -887,24 +887,40 @@ function addLog(content) {
 // 游戏主循环
 function startGameLoop() {
     // 每分钟更新一次游戏时间
+    console.log('游戏循环启动...');
     setInterval(() => {
-        // 增加分钟
-        gameState.gameTime.minute += 10;
-        
-        if (gameState.gameTime.minute >= 60) {
-            gameState.gameTime.minute = 0;
-            gameState.gameTime.hour++;
+        try {
+            // 增加分钟
+            const oldMinute = gameState.gameTime.minute;
+            gameState.gameTime.minute += 10;
             
-            if (gameState.gameTime.hour >= 24) {
-                gameState.gameTime.hour = 0;
-                gameState.gameTime.day++;
-                gameState.resources.totalDays++;
+            if (gameState.gameTime.minute >= 60) {
+                gameState.gameTime.minute = 0;
+                gameState.gameTime.hour++;
+                
+                if (gameState.gameTime.hour >= 24) {
+                    gameState.gameTime.hour = 0;
+                    gameState.gameTime.day++;
+                    gameState.resources.totalDays++;
                 
                 // 每30天换季
                 if (gameState.gameTime.day % 30 === 0) {
                     const seasons = ['春', '夏', '秋', '冬'];
+                    
+                    // 确保season字段存在，如果不存在则默认为'春'
+                    if (!gameState.gameTime.season) {
+                        gameState.gameTime.season = '春';
+                    }
+                    
                     const currentIndex = seasons.indexOf(gameState.gameTime.season);
-                    gameState.gameTime.season = seasons[(currentIndex + 1) % 4];
+                    
+                    // 确保索引有效，如果无效则默认为'春'
+                    if (currentIndex === -1) {
+                        gameState.gameTime.season = seasons[0]; // 默认为'春'
+                    } else {
+                        gameState.gameTime.season = seasons[(currentIndex + 1) % 4];
+                    }
+                    
                     addLog(`季节更替：${gameState.gameTime.season}季来临`);
                 }
                 
@@ -923,8 +939,11 @@ function startGameLoop() {
         updateTimeDisplay();
         updateResourceDisplay();
         
-        // 定期检查成就（每10分钟游戏时间检查一次）
-        checkAchievements();
+        } catch (error) {
+            console.error('游戏循环错误:', error);
+            console.error('当前游戏状态:', gameState);
+            // 不中断游戏循环，继续运行
+        }
         
     }, 1000); // 现实1秒 = 游戏10分钟
 }
@@ -993,7 +1012,14 @@ function loadGameState() {
             Object.assign(gameState.elements, loadedState.elements || {});
             Object.assign(gameState.resources, loadedState.resources || {});
             Object.assign(gameState.mountain, loadedState.mountain || {});
-            Object.assign(gameState.gameTime, loadedState.gameTime || {});
+            // 合并游戏时间，确保season字段存在
+            const loadedGameTime = loadedState.gameTime || {};
+            gameState.gameTime = {
+                hour: loadedGameTime.hour || gameState.gameTime.hour || 8,
+                minute: loadedGameTime.minute || gameState.gameTime.minute || 0,
+                day: loadedGameTime.day || gameState.gameTime.day || 1,
+                season: loadedGameTime.season || gameState.gameTime.season || '春'
+            };
             Object.assign(gameState.weather, loadedState.weather || {});
             
             gameState.logs = loadedState.logs || [];
