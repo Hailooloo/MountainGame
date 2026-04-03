@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成就系统测试 - 山中一甲子</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="achievement-effects.css">
+    <style>
+        .test-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        
+        .test-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .test-section {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 2px solid var(--border-color);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .test-title {
+            color: var(--accent-color);
+            margin-bottom: 20px;
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 2rem;
+        }
+        
+        .test-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .test-btn {
+            padding: 12px 24px;
+            background: var(--water-color);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: white;
+            font-family: "Microsoft YaHei", "微软雅黑", sans-serif;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .test-btn:hover {
+            background: #1976D2;
+            transform: translateY(-2px);
+        }
+        
+        .test-results {
+            background: rgba(33, 150, 243, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid var(--accent-color);
+        }
+        
+        .result-item {
+            padding: 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .result-success {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        .result-error {
+            color: #F44336;
+            font-weight: bold;
+        }
+        
+        .result-info {
+            color: #2196F3;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <header class="test-header">
+            <h1 class="test-title">🏆 成就系统测试</h1>
+            <p>验证山中一甲子游戏成就系统的功能</p>
+        </header>
+        
+        <section class="test-section">
+            <h2>1. 系统初始化测试</h2>
+            <div class="test-buttons">
+                <button id="test-init" class="test-btn">测试成就系统初始化</button>
+                <button id="test-load" class="test-btn">测试成就数据加载</button>
+                <button id="test-save" class="test-btn">测试成就数据保存</button>
+            </div>
+            <div id="init-results" class="test-results">
+                <div class="result-item">点击按钮开始测试...</div>
+            </div>
+        </section>
+        
+        <section class="test-section">
+            <h2>2. 成就解锁测试</h2>
+            <div class="test-buttons">
+                <button id="test-wood-achievement" class="test-btn">测试木元素成就</button>
+                <button id="test-save-achievement" class="test-btn">测试保存成就</button>
+                <button id="test-time-achievement" class="test-btn">测试时间成就</button>
+                <button id="test-dialogue-achievement" class="test-btn">测试对话成就</button>
+                <button id="test-balance-achievement" class="test-btn">测试五行平衡成就</button>
+            </div>
+            <div id="unlock-results" class="test-results">
+                <div class="result-item">点击按钮测试成就解锁...</div>
+            </div>
+        </section>
+        
+        <section class="test-section">
+            <h2>3. UI显示测试</h2>
+            <div class="test-buttons">
+                <button id="test-render" class="test-btn">渲染成就列表</button>
+                <button id="test-stats" class="test-btn">更新统计信息</button>
+                <button id="test-effect" class="test-btn">测试特效显示</button>
+            </div>
+            <div id="ui-results" class="test-results">
+                <div class="result-item">点击按钮测试UI功能...</div>
+            </div>
+        </section>
+        
+        <section class="test-section">
+            <h2>4. 综合测试</h2>
+            <div class="test-buttons">
+                <button id="test-all" class="test-btn">运行完整测试</button>
+                <button id="test-reset" class="test-btn">重置测试数据</button>
+            </div>
+            <div id="comprehensive-results" class="test-results">
+                <div class="result-item">点击按钮运行综合测试...</div>
+            </div>
+        </section>
+        
+        <section class="test-section">
+            <h2>测试说明</h2>
+            <div class="test-info">
+                <p><strong>测试目的：</strong>验证成就系统的各项功能是否正常工作</p>
+                <p><strong>测试内容：</strong></p>
+                <ul>
+                    <li>成就系统初始化和数据加载</li>
+                    <li>各种类型成就的解锁条件检测</li>
+                    <li>成就列表的渲染和UI更新</li>
+                    <li>成就解锁特效显示</li>
+                    <li>成就数据的保存和恢复</li>
+                </ul>
+                <p><strong>注意事项：</strong>测试数据仅保存在浏览器内存中，刷新页面会重置</p>
+            </div>
+        </section>
+    </div>
+    
+    <script src="achievements.js"></script>
+    <script>
+        // 测试结果管理器
+        const TestManager = {
+            results: {},
+            
+            addResult: function(section, message, type = 'info') {
+                const resultsDiv = document.getElementById(`${section}-results`);
+                if (!resultsDiv) return;
+                
+                const item = document.createElement('div');
+                item.className = `result-item result-${type}`;
+                item.innerHTML = `• ${message}`;
+                resultsDiv.appendChild(item);
+                resultsDiv.scrollTop = resultsDiv.scrollHeight;
+            },
+            
+            clearResults: function(section) {
+                const resultsDiv = document.getElementById(`${section}-results`);
+                if (resultsDiv) {
+                    resultsDiv.innerHTML = '';
+                }
+            }
+        };
+        
+        // 模拟游戏状态
+        const mockGameState = {
+            elements: {
+                wood: 50,
+                fire: 50,
+                earth: 50,
+                metal: 50,
+                water: 50
+            },
+            resources: {
+                waterCoins: 100,
+                totalDays: 0,
+                currentDay: 1,
+                totalWaterCoins: 0
+            },
+            mountain: {
+                plants: 0,
+                animals: 0,
+                soilFertility: 50,
+                storageCapacity: 100,
+                storedItems: 0
+            },
+            gameTime: {
+                hour: 8,
+                minute: 0,
+                day: 1,
+                season: '春'
+            },
+            weather: {
+                type: 'sunny',
+                description: '风和日丽',
+                effect: null
+            },
+            balance: '尚可',
+            logs: [],
+            dialogues: [],
+            achievements: {
+                saveCount: 0,
+                dialogueCount: 0,
+                day: 1,
+                mountainLevel: 0,
+                saved: {}
+            }
+        };
+        
+        // 测试函数
+        function testInitialization() {
+            TestManager.clearResults('init');
+            
+            try {
+                // 测试成就管理器是否存在
+                if (!window.achievementManager) {
+                    TestManager.addResult('init', '❌ 成就管理器未定义', 'error');
+                    return;
+                }
+                
+                TestManager.addResult('init', '✅ 成就管理器已加载', 'success');
+                
+                // 测试初始化
+                window.achievementManager.init(mockGameState.achievements.saved);
+                TestManager.addResult('init', '✅ 成就系统初始化成功', 'success');
+                
+                // 测试统计数据
+                const stats = window.achievementManager.getStats();
+                TestManager.addResult('init', `📊 总成就数: ${stats.total}`, 'info');
+                TestManager.addResult('init', `📊 已解锁: ${stats.unlocked}`, 'info');
+                TestManager.addResult('init', `📊 完成度: ${stats.percentage}%`, 'info');
+                TestManager.addResult('init', `📊 总积分: ${stats.totalPoints}`, 'info');
+                
+            } catch (error) {
+                TestManager.addResult('init', `❌ 初始化失败: ${error.message}`, 'error');
+            }
+        }
+        
+        function testAchievementUnlock(type) {
+            TestManager.clearResults('unlock');
+            
+            try {
+                if (!window.achievementManager) {
+                    TestManager.addResult('unlock', '❌ 成就系统未初始化', 'error');
+                    return;
+                }
+                
+                let testState = { ...mockGameState };
+                let message = '';
+                
+                switch(type) {
+                    case 'wood':
+                        testState.elements.wood = 120;
+                        message = '木元素达到120点';
+                        break;
+                    case 'save':
+                        testState.achievements.saveCount = 5;
+                        message = '保存游戏5次';
+                        break;
+                    case 'time':
+                        testState.gameTime.day = 60;
+                        message = '游戏时间达到60天';
+                        break;
+                    case 'dialogue':
+                        testState.dialogues = new Array(15).fill({});
+                        message = '对话15次';
+                        break;
+                    case 'balance':
+                        testState.elements = { wood: 90, fire: 95, earth: 100, metal: 105, water: 110 };
+                        message = '五行元素都在80-120之间';
+                        break;
+                }
+                
+                const unlocked = window.achievementManager.checkAchievements(testState);
+                if (unlocked.length > 0) {
+                    TestManager.addResult('unlock', `✅ ${message} - 解锁${unlocked.length}个成就`, 'success');
+                    unlocked.forEach(achievement => {
+                        TestManager.addResult('unlock', `   🏆 ${achievement.title} (+${achievement.points}分)`, 'info');
+                    });
+                } else {
+                    TestManager.addResult('unlock', `ℹ️ ${message} - 未解锁新成就`, 'info');
+                }
+                
+            } catch (error) {
+                TestManager.addResult('unlock', `❌ 测试失败: ${error.message}`, 'error');
+            }
+        }
+        
+        function testUIRendering() {
+            TestManager.clearResults('ui');
+            
+            try {
+                if (!window.achievementManager) {
+                    TestManager.addResult('ui', '❌ 成就系统未初始化', 'error');
+                    return;
+                }
+                
+                // 测试渲染
+                window.achievementManager.renderAchievements();
+                TestManager.addResult('ui', '✅ 成就列表渲染完成', 'success');
+                
+                // 测试统计更新
+                const stats = window.achievementManager.getStats();
+                TestManager.addResult('ui', `📊 统计数据更新完成: ${stats.unlocked}/${stats.total}`, 'info');
+                
+                // 测试特效（模拟解锁）
+                const mockAchievement = {
+                    id: 'test_achievement',
+                    title: '测试成就',
+                    description: '这是一个测试成就',
+                    icon: '🏆',
+                    points: 50
+                };
+                
+                // 创建特效容器
+                const effectContainer = document.createElement('div');
+                effectContainer.id = 'test-effect-container';
+                document.body.appendChild(effectContainer);
+                
+                // 显示测试特效
+                const effect = document.createElement('div');
+                effect.className = 'achievement-unlock-effect';
+                effect.innerHTML = `
+                    <div class="achievement-popup">
+                        <div class="achievement-icon-large">${mockAchievement.icon}</div>
+                        <div class="achievement-title-large">${mockAchievement.title}</div>
+                        <div class="achievement-desc-large">${mockAchievement.description}</div>
+                        <div class="achievement-points-large">+${mockAchievement.points}分</div>
+                    </div>
+                `;
+                effectContainer.appendChild(effect);
+                
+                TestManager.addResult('ui', '✅ 成就解锁特效显示测试', 'success');
+                
+                // 3秒后移除特效
+                setTimeout(() => {
+                    effectContainer.remove();
+                }, 3000);
+                
+            } catch (error) {
+                TestManager.addResult('ui', `❌ UI测试失败: ${error.message}`, 'error');
+            }
+        }
+        
+        function runComprehensiveTest() {
+            TestManager.clearResults('comprehensive');
+            
+            TestManager.addResult('comprehensive', '🚀 开始综合测试...', 'info');
+            
+            // 顺序执行测试
+            setTimeout(() => testInitialization(), 100);
+            setTimeout(() => testAchievementUnlock('wood'), 500);
+            setTimeout(() => testAchievementUnlock('save'), 1000);
+            setTimeout(() => testAchievementUnlock('time'), 1500);
+            setTimeout(() => testUIRendering(), 2000);
+            
+            setTimeout(() => {
+                if (window.achievementManager) {
+                    const stats = window.achievementManager.getStats();
+                    TestManager.addResult('comprehensive', `🎉 综合测试完成！总积分: ${stats.totalPoints}`, 'success');
+                } else {
+                    TestManager.addResult('comprehensive', '❌ 综合测试失败：成就系统未初始化', 'error');
+                }
+            }, 2500);
+        }
+        
+        function resetTestData() {
+            TestManager.clearResults('comprehensive');
+            TestManager.addResult('comprehensive', '🔄 重置测试数据...', 'info');
+            
+            if (window.achievementManager) {
+                window.achievementManager.init({});
+                TestManager.addResult('comprehensive', '✅ 测试数据已重置', 'success');
+            }
+        }
+        
+        // 事件监听器
+        document.getElementById('test-init').addEventListener('click', testInitialization);
+        document.getElementById('test-load').addEventListener('click', () => {
+            TestManager.clearResults('init');
+            TestManager.addResult('init', 'ℹ️ 此功能需要与游戏主逻辑集成', 'info');
+        });
+        document.getElementById('test-save').addEventListener('click', () => {
+            TestManager.clearResults('init');
+            TestManager.addResult('init', 'ℹ️ 此功能需要与游戏主逻辑集成', 'info');
+        });
+        
+        document.getElementById('test-wood-achievement').addEventListener('click', () => testAchievementUnlock('wood'));
+        document.getElementById('test-save-achievement').addEventListener('click', () => testAchievementUnlock('save'));
+        document.getElementById('test-time-achievement').addEventListener('click', () => testAchievementUnlock('time'));
+        document.getElementById('test-dialogue-achievement').addEventListener('click', () => testAchievementUnlock('dialogue'));
+        document.getElementById('test-balance-achievement').addEventListener('click', () => testAchievementUnlock('balance'));
+        
+        document.getElementById('test-render').addEventListener('click', testUIRendering);
+        document.getElementById('test-stats').addEventListener('click', () => {
+            TestManager.clearResults('ui');
+            if (window.achievementManager) {
+                const stats = window.achievementManager.getStats();
+                TestManager.addResult('ui', `📊 当前统计: ${stats.unlocked}/${stats.total} 成就, ${stats.totalPoints} 积分`, 'info');
+            }
+        });
+        document.getElementById('test-effect').addEventListener('click', testUIRendering);
+        
+        document.getElementById('test-all').addEventListener('click', runComprehensiveTest);
+        document.getElementById('test-reset').addEventListener('click', resetTestData);
+        
+        // 页面加载时自动初始化
+        window.addEventListener('load', () => {
+            TestManager.addResult('init', '📋 成就系统测试页面已加载', 'info');
+            TestManager.addResult('init', '点击"测试成就系统初始化"按钮开始测试', 'info');
+        });
+    </script>
+</body>
+</html>

@@ -15,7 +15,8 @@ const gameState = {
     resources: {
         waterCoins: 100,
         totalDays: 0,
-        currentDay: 1
+        currentDay: 1,
+        totalWaterCoins: 0
     },
     
     // 荒山状态
@@ -49,7 +50,15 @@ const gameState = {
     logs: [],
     
     // 对话历史
-    dialogues: []
+    dialogues: [],
+    
+    // 成就系统
+    achievements: {
+        saveCount: 0,
+        dialogueCount: 0,
+        day: 1,
+        mountainLevel: 0
+    }
 };
 
 // 五行相生相克关系
@@ -208,6 +217,9 @@ function initGame() {
     // 从本地存储加载游戏状态
     loadGameState();
     
+    // 初始化成就系统
+    initAchievementSystem();
+    
     // 更新UI
     updateAllUI();
     
@@ -242,6 +254,113 @@ function initVisualEffects() {
     // 初始化胜利管理器
     if (window.victoryManager) {
         window.victoryManager.loadVictoryData();
+    }
+}
+
+// 初始化成就系统
+function initAchievementSystem() {
+    console.log('初始化成就系统...');
+    
+    // 等待成就脚本加载完成
+    if (!window.achievementManager) {
+        console.warn('成就系统脚本未加载，延迟初始化');
+        setTimeout(initAchievementSystem, 1000);
+        return;
+    }
+    
+    // 从游戏状态获取已解锁的成就
+    const savedAchievements = gameState.achievements.saved || {};
+    
+    // 初始化成就管理器
+    window.achievementManager.init(savedAchievements);
+    
+    // 设置成就解锁回调
+    window.achievementManager.onAchievementUnlocked = function(achievement) {
+        // 显示成就解锁特效
+        showAchievementUnlockEffect(achievement);
+        
+        // 保存成就状态到游戏状态
+        gameState.achievements.saved = gameState.achievements.saved || {};
+        gameState.achievements.saved[achievement.id] = true;
+        
+        // 更新UI
+        updateAchievementUI();
+    };
+    
+    // 初始渲染成就列表
+    window.achievementManager.renderAchievements();
+    
+    // 更新成就UI统计
+    updateAchievementUI();
+    
+    console.log('成就系统初始化完成');
+}
+
+// 显示成就解锁特效
+function showAchievementUnlockEffect(achievement) {
+    // 创建特效元素
+    const effect = document.createElement('div');
+    effect.className = 'achievement-unlock-effect';
+    effect.innerHTML = `
+        <div class="achievement-popup">
+            <div class="achievement-icon-large">${achievement.icon}</div>
+            <div class="achievement-title-large">${achievement.title}</div>
+            <div class="achievement-desc-large">${achievement.description}</div>
+            <div class="achievement-points-large">+${achievement.points}分</div>
+        </div>
+    `;
+    
+    document.body.appendChild(effect);
+    
+    // 3秒后移除
+    setTimeout(() => {
+        effect.remove();
+    }, 3000);
+}
+
+// 更新成就UI统计
+function updateAchievementUI() {
+    if (!window.achievementManager) return;
+    
+    const stats = window.achievementManager.getStats();
+    
+    // 更新统计栏
+    const totalElement = document.getElementById('total-achievements');
+    const unlockedElement = document.getElementById('unlocked-achievements');
+    const completionElement = document.getElementById('completion-rate');
+    const pointsElement = document.getElementById('total-points');
+    
+    if (totalElement) {
+        totalElement.querySelector('.stat-value').textContent = `${stats.unlocked}/${stats.total}`;
+    }
+    if (unlockedElement) {
+        unlockedElement.querySelector('.stat-value').textContent = stats.unlocked;
+    }
+    if (completionElement) {
+        completionElement.querySelector('.stat-value').textContent = `${stats.percentage}%`;
+    }
+    if (pointsElement) {
+        pointsElement.querySelector('.stat-value').textContent = stats.totalPoints;
+    }
+}
+
+// 检查成就（在游戏状态变化时调用）
+function checkAchievements() {
+    if (!window.achievementManager) return;
+    
+    // 更新游戏状态中的成就相关数据
+    gameState.achievements.day = gameState.gameTime.day;
+    gameState.achievements.dialogueCount = gameState.dialogues.length;
+    
+    // 检查并解锁成就
+    const newlyUnlocked = window.achievementManager.checkAchievements(gameState);
+    
+    if (newlyUnlocked.length > 0) {
+        // 更新UI
+        updateAchievementUI();
+        window.achievementManager.renderAchievements();
+    }
+}
     }
 }
 
@@ -611,6 +730,9 @@ async function handleMoodInput(moodText) {
         // 添加日志
         addLog(`山灵感知到你的${aiResponse.moodChinese}，触发了${aiResponse.weather.name}天气`);
         
+        // 检查成就（对话相关成就）
+        checkAchievements();
+        
     } catch (error) {
         console.error('AI对话错误:', error);
         // 移除思考提示
@@ -789,6 +911,7 @@ function startGameLoop() {
                 // 每日收入（水元素影响）
                 const dailyIncome = Math.floor(gameState.elements.water / 10);
                 gameState.resources.waterCoins += dailyIncome;
+                gameState.resources.totalWaterCoins = (gameState.resources.totalWaterCoins || 0) + dailyIncome;
                 addLog(`新的一天开始，获得${dailyIncome}水币（水元素影响）`);
                 
                 // 每日检查五行平衡奖励
@@ -799,6 +922,9 @@ function startGameLoop() {
         // 更新UI
         updateTimeDisplay();
         updateResourceDisplay();
+        
+        // 定期检查成就（每10分钟游戏时间检查一次）
+        checkAchievements();
         
     }, 1000); // 现实1秒 = 游戏10分钟
 }
@@ -821,13 +947,33 @@ function checkDailyBalanceBonus() {
 // 保存游戏状态
 function saveGameState() {
     try {
+        // 更新保存次数成就
+        gameState.achievements.saveCount++;
+        
+        // 获取成就系统解锁状态
+        let achievementData = {};
+        if (window.achievementManager) {
+            achievementData = window.achievementManager.getSaveData();
+        }
+        
         const saveData = {
             ...gameState,
+            achievements: {
+                ...gameState.achievements,
+                day: gameState.gameTime.day,
+                saved: achievementData
+            },
             saveTime: new Date().toISOString()
         };
         
         localStorage.setItem('mountainGameSave', JSON.stringify(saveData));
         addLog('游戏已保存');
+        
+        // 检查成就
+        if (window.achievementManager) {
+            window.achievementManager.checkAchievements(gameState);
+        }
+        
         return true;
     } catch (error) {
         console.error('保存游戏失败:', error);
@@ -852,6 +998,11 @@ function loadGameState() {
             
             gameState.logs = loadedState.logs || [];
             gameState.dialogues = loadedState.dialogues || [];
+            
+            // 恢复成就数据
+            if (loadedState.achievements) {
+                Object.assign(gameState.achievements, loadedState.achievements);
+            }
             
             // 恢复日志显示
             restoreLogs();
@@ -1015,6 +1166,30 @@ function setupEventListeners() {
             DOM.helpModal.style.display = 'none';
         }
     });
+    
+    // 成就系统按钮
+    const refreshAchievementsBtn = document.getElementById('refresh-achievements-btn');
+    const achievementHelpBtn = document.getElementById('achievement-help-btn');
+    
+    if (refreshAchievementsBtn) {
+        refreshAchievementsBtn.addEventListener('click', () => {
+            if (window.achievementManager) {
+                window.achievementManager.renderAchievements();
+                updateAchievementUI();
+                addLog('成就列表已刷新');
+            }
+        });
+    }
+    
+    if (achievementHelpBtn) {
+        achievementHelpBtn.addEventListener('click', () => {
+            addLog('🎮 成就系统说明：');
+            addLog('• 完成特定目标解锁成就');
+            addLog('• 每个成就提供积分奖励');
+            addLog('• 已解锁成就会显示⭐标记');
+            addLog('• 成就数据会自动保存');
+        });
+    }
 }
 
 // 页面加载完成后初始化游戏

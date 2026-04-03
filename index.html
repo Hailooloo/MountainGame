@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>山中一甲子 - 五行放置游戏</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="achievement-effects.css">
     <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -240,7 +241,61 @@
                     </button>
                 </div>
             </section>
+
+            <!-- 成就系统 -->
+            <section class="achievements-section">
+                <h2><i class="fas fa-trophy"></i> 山中成就</h2>
+                <div class="achievements-container">
+                    <div class="achievements-stats-bar">
+                        <div class="stat-item" id="total-achievements">
+                            <div class="stat-label">总成就</div>
+                            <div class="stat-value">0/24</div>
+                        </div>
+                        <div class="stat-item" id="unlocked-achievements">
+                            <div class="stat-label">已解锁</div>
+                            <div class="stat-value">0</div>
+                        </div>
+                        <div class="stat-item" id="completion-rate">
+                            <div class="stat-label">完成度</div>
+                            <div class="stat-value">0%</div>
+                        </div>
+                        <div class="stat-item" id="total-points">
+                            <div class="stat-label">总积分</div>
+                            <div class="stat-value">0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="achievements-list" id="achievements-list">
+                        <div class="achievement-placeholder">
+                            <div class="placeholder-icon">🏆</div>
+                            <div class="placeholder-text">加载成就数据中...</div>
+                        </div>
+                    </div>
+                    
+                    <div class="achievement-actions">
+                        <button id="refresh-achievements-btn" class="secondary-btn">
+                            <i class="fas fa-sync-alt"></i> 刷新成就
+                        </button>
+                        <button id="achievement-help-btn" class="secondary-btn">
+                            <i class="fas fa-question-circle"></i> 成就说明
+                        </button>
+                    </div>
+                </div>
+            </section>
         </main>
+        
+        <!-- 游戏底部 -->
+        <footer class="game-footer">
+            <div class="footer-info">
+                <span>山中一甲子 · 五行放置游戏</span>
+                <span id="game-version">v1.2.0</span>
+            </div>
+            <div class="footer-controls">
+                <button id="help-btn" class="control-btn">
+                    <i class="fas fa-question-circle"></i> 帮助
+                </button>
+            </div>
+        </footer>
     </div>
 
     <!-- 帮助模态框 -->
@@ -283,6 +338,7 @@
     </div>
 
     <script src="ai-service.js"></script>
+    <script src="achievements.js"></script>
     <script src="visual-effects.js"></script>
     <script src="victory-screen.js"></script>
     <script src="game.js"></script>
